@@ -3,6 +3,7 @@ package com.umutku.readingisgood.application.impl;
 import com.umutku.readingisgood.application.BookService;
 import com.umutku.readingisgood.domain.Book;
 import com.umutku.readingisgood.dto.BookDTO;
+import com.umutku.readingisgood.exception.BookNotFoundException;
 import com.umutku.readingisgood.infrastructure.BookRepository;
 import com.umutku.readingisgood.response.RestResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,20 @@ public class BookServiceImpl implements BookService {
         var result = bookRepository.save(book);
 
         return new RestResponse<>(HttpStatus.CREATED, result);
+    }
+
+    @Override
+    public RestResponse<Book> getBook(long id) {
+        var result = bookRepository.findById(id).orElseThrow(()->new BookNotFoundException(id));
+        return new RestResponse<>(HttpStatus.OK, result);
+    }
+
+    @Override
+    public RestResponse<Book> updateBook(long id, BookDTO bookDTO) {
+        var bookToUpdate = bookRepository.findById(id).orElseThrow(()->new BookNotFoundException(id));
+
+        bookToUpdate.update(bookDTO);
+
+        return new RestResponse<>(HttpStatus.OK, bookToUpdate);
     }
 }

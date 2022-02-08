@@ -6,4 +6,8 @@ import com.umutku.readingisgood.response.RestResponse;
 
 public interface BookService {
     RestResponse<Book> createBook(BookDTO bookDTO);
+
+    RestResponse<Book> getBook(long id);
+
+    RestResponse<Book> updateBook(long id, BookDTO bookDTO);
 }

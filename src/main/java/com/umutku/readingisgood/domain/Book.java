@@ -29,4 +29,10 @@ public class Book extends BaseEntity {
     public static Book fromDTO(BookDTO bookDTO) {
         return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getReleaseDate());
     }
+
+    public void update(BookDTO bookDTO) {
+        this.title = bookDTO.getTitle();
+        this.author = bookDTO.getAuthor();
+        this.releaseDate = bookDTO.getReleaseDate();
+    }
 }

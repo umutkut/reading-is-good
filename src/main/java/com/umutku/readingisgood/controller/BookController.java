@@ -7,10 +7,7 @@ import com.umutku.readingisgood.response.RestResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/book")
@@ -22,5 +19,15 @@ public class BookController {
     @PostMapping
     public ResponseEntity<RestResponse<Book>> createBook(@Validated @RequestBody BookDTO bookDTO) {
         return ResponseEntity.ok(bookService.createBook(bookDTO));
+    }
+
+    @PutMapping
+    public ResponseEntity<RestResponse<Book>> updateBook(@RequestParam long id, @Validated @RequestBody BookDTO bookDTO) {
+        return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<RestResponse<Book>> getBook(@RequestParam long id){
+        return ResponseEntity.ok(bookService.getBook(id));
     }
 }

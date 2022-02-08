@@ -1,4 +1,4 @@
-package com.umutku.readingisgood.advice;
+package com.umutku.readingisgood.controller.advice;
 
 import com.umutku.readingisgood.response.RestResponse;
 import org.springframework.http.HttpStatus;
