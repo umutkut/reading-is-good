@@ -37,6 +37,8 @@ public class BookServiceImpl implements BookService {
 
         bookToUpdate.update(bookDTO);
 
-        return new RestResponse<>(HttpStatus.OK, bookToUpdate);
+        var result = bookRepository.save(bookToUpdate);
+
+        return new RestResponse<>(HttpStatus.OK, result);
     }
 }
