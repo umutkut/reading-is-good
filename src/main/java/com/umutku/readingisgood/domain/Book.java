@@ -1,15 +1,13 @@
 package com.umutku.readingisgood.domain;
 
+import com.google.common.base.Preconditions;
 import com.umutku.readingisgood.dto.BookDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Data
 @Table(name = "book")
@@ -18,21 +16,24 @@ import java.util.Date;
 @NoArgsConstructor
 public class Book extends BaseEntity {
 
+    public static final String NOT_ENOUGH_STOCK = "NOT ENOUGH STOCK FOR BOOK: %d";
+
     private String title;
 
     private String author;
 
-    @Column(name = "release_date")
-    @Nullable
-    private Date releaseDate;
+    private int stock;
 
     public static Book fromDTO(BookDTO bookDTO) {
-        return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getReleaseDate());
+        return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getStock());
     }
 
-    public void update(BookDTO bookDTO) {
-        this.title = bookDTO.getTitle();
-        this.author = bookDTO.getAuthor();
-        this.releaseDate = bookDTO.getReleaseDate();
+    public void decreaseStock(int amount) {
+        Preconditions.checkArgument(stock - amount >= 0, String.format(NOT_ENOUGH_STOCK, getId()));
+        this.stock -= amount;
+    }
+
+    public void updateStock(int newStock) {
+        this.stock = newStock;
     }
 }

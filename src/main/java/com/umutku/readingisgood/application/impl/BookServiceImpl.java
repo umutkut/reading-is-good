@@ -32,10 +32,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public RestResponse<Book> updateBook(long id, BookDTO bookDTO) {
+    public RestResponse<Book> updateStock(long id, int newStock) {
         var bookToUpdate = bookRepository.findById(id).orElseThrow(()->new BookNotFoundException(id));
 
-        bookToUpdate.update(bookDTO);
+        bookToUpdate.updateStock(newStock);
 
         var result = bookRepository.save(bookToUpdate);
 

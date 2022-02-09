@@ -7,7 +7,6 @@ import com.umutku.readingisgood.controller.BookController;
 import com.umutku.readingisgood.domain.Book;
 import com.umutku.readingisgood.dto.BookDTO;
 import com.umutku.readingisgood.infrastructure.BookRepository;
-import com.umutku.readingisgood.response.RestResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -20,37 +19,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReadingIsGoodApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookControllerTest {
 
-    @LocalServerPort
-    private int port;
     TestRestTemplate restTemplate = new TestRestTemplate();
     HttpHeaders headers = new HttpHeaders();
-
     @Autowired
     BookController bookController;
     @MockBean
     BookRepository bookRepository;
-
-
+    @LocalServerPort
+    private int port;
     private BookDTO bookDTO;
     private Book book;
 
     @BeforeEach
-    void prepare(){
+    void prepare() {
         String title = "TestTitle";
         String author = "TestAuthor";
-        Date publishedDate = Date.from(Instant.now());
-        bookDTO = new BookDTO(title, author, publishedDate);
+        int stock = 10;
+        bookDTO = new BookDTO(title, author, stock);
         book = Book.fromDTO(bookDTO);
     }
 
@@ -63,7 +60,7 @@ class BookControllerTest {
         //Call endpoint
         HttpEntity<BookDTO> entity = new HttpEntity<>(bookDTO, headers);
 
-        ResponseEntity<String>  response = restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 createURLWithPort("/api/v1/book"),
                 HttpMethod.POST, entity, String.class);
 
@@ -79,12 +76,12 @@ class BookControllerTest {
     void testGetBook() throws JSONException, JsonProcessingException {
 
         //Mock repository
-        Mockito.when(bookRepository.findById(0l)).thenReturn(Optional.of(book));
+        Mockito.when(bookRepository.findById(0L)).thenReturn(Optional.of(book));
 
         //Call endpoint
         HttpEntity<BookDTO> entity = new HttpEntity<>(bookDTO, headers);
 
-        ResponseEntity<String>  response = restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 createURLWithPort("/api/v1/book?id=0"),
                 HttpMethod.GET, entity, String.class);
 
@@ -99,21 +96,17 @@ class BookControllerTest {
     @Test
     void testUpdateBook() throws JSONException, JsonProcessingException {
         //Given
-        String updatedTitle = "UpdatedTitle";
-        String author = "TestAuthor";
-        var publishedDate = Date.from(Instant.now());
-        var updatedDTO = new BookDTO(updatedTitle, author, publishedDate);
-        var updatedBook = Book.fromDTO(updatedDTO);
+        int newStock = 111;
 
         //Mock repository
-        Mockito.when(bookRepository.findById(0l)).thenReturn(Optional.of(book));
-        Mockito.when(bookRepository.save(updatedBook)).thenReturn(updatedBook);
+        Mockito.when(bookRepository.findById(0L)).thenReturn(Optional.of(book));
+        Mockito.when(bookRepository.save(book)).thenReturn(book);
 
         //Call endpoint
-        HttpEntity<BookDTO> entity = new HttpEntity<>(updatedDTO, headers);
+        HttpEntity<BookDTO> entity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<String>  response = restTemplate.exchange(
-                createURLWithPort("/api/v1/book?id=0"),
+        ResponseEntity<String> response = restTemplate.exchange(
+                createURLWithPort("/api/v1/book/0/stock?newStock=" + newStock),
                 HttpMethod.PUT, entity, String.class);
 
         //Assert
@@ -121,7 +114,44 @@ class BookControllerTest {
         Assertions.assertEquals("OK", responseObj.get("status"));
 
         Book responseBook = new ObjectMapper().readValue(responseObj.get("data").toString(), Book.class);
-        Assertions.assertEquals(updatedBook, responseBook);
+        Assertions.assertEquals(book, responseBook);
+    }
+
+    @Test
+    void testBookNotFoundOnUpdateStock() throws JSONException {
+        //Given
+        int newStock = 111;
+
+        //Mock repository
+        Mockito.when(bookRepository.findById(0L)).thenReturn(Optional.empty());
+
+        //Call endpoint
+        HttpEntity<BookDTO> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                createURLWithPort("/api/v1/book/0/stock?newStock=" + newStock),
+                HttpMethod.PUT, entity, String.class);
+
+        //Assert
+        JSONObject responseObj = new JSONObject(response.getBody());
+        Assertions.assertEquals("NOT_FOUND", responseObj.get("status"));
+    }
+
+    @Test
+    void testBookNotFoundOnGetBook() throws JSONException {
+        //Mock repository
+        Mockito.when(bookRepository.findById(0L)).thenReturn(Optional.empty());
+
+        //Call endpoint
+        HttpEntity<BookDTO> entity = new HttpEntity<>(bookDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                createURLWithPort("/api/v1/book?id=0"),
+                HttpMethod.GET, entity, String.class);
+
+        //Assert
+        JSONObject responseObj = new JSONObject(response.getBody());
+        Assertions.assertEquals("NOT_FOUND", responseObj.get("status"));
     }
 
     private String createURLWithPort(String uri) {

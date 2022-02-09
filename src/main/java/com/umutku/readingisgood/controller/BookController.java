@@ -21,9 +21,11 @@ public class BookController {
         return ResponseEntity.ok(bookService.createBook(bookDTO));
     }
 
-    @PutMapping
-    public ResponseEntity<RestResponse<Book>> updateBook(@RequestParam long id, @Validated @RequestBody BookDTO bookDTO) {
-        return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
+    @PutMapping(value="/{bookId}/stock")
+    public ResponseEntity<RestResponse<Book>> updateStock(
+            @PathVariable("bookId") long bookId,
+            @RequestParam("newStock") int newStock) {
+        return ResponseEntity.ok(bookService.updateStock(bookId, newStock));
     }
 
     @GetMapping
