@@ -1,10 +1,7 @@
 package com.umutku.readingisgood.controller;
 
-import com.umutku.readingisgood.application.CustomerService;
 import com.umutku.readingisgood.application.OrderService;
-import com.umutku.readingisgood.domain.Customer;
 import com.umutku.readingisgood.domain.Order;
-import com.umutku.readingisgood.dto.CustomerDTO;
 import com.umutku.readingisgood.dto.OrderDTO;
 import com.umutku.readingisgood.response.RestResponse;
 import lombok.RequiredArgsConstructor;

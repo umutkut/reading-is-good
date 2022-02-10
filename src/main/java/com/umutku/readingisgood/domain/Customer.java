@@ -9,7 +9,6 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -21,7 +20,7 @@ public class Customer extends BaseEntity {
 
     //TODO: spring security will be integrated
 
-    @Column(unique=true)
+    @Column(unique = true)
     String userName;
 
     String password;
@@ -37,11 +36,11 @@ public class Customer extends BaseEntity {
     @Lazy
     private List<Order> orders;
 
-    public static Customer fromDTO(CustomerDTO dto){
+    public static Customer fromDTO(CustomerDTO dto) {
         return new Customer(dto.getUsername(), dto.getPassword(), dto.getEmail(), dto.getAddress(), new ArrayList<>());
     }
 
-    public void addOrder(Order order){
+    public void addOrder(Order order) {
         orders.add(order);
     }
 

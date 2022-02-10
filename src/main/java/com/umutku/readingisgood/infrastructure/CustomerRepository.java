@@ -1,7 +1,6 @@
 package com.umutku.readingisgood.infrastructure;
 
 import com.umutku.readingisgood.domain.Customer;
-import com.umutku.readingisgood.domain.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

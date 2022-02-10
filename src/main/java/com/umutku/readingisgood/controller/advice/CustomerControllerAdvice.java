@@ -1,6 +1,5 @@
 package com.umutku.readingisgood.controller.advice;
 
-import com.umutku.readingisgood.exception.BookNotFoundException;
 import com.umutku.readingisgood.exception.InvalidUserNameException;
 import com.umutku.readingisgood.response.RestResponse;
 import org.springframework.http.HttpStatus;

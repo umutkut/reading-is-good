@@ -3,9 +3,7 @@ package com.umutku.readingisgood.integration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.umutku.readingisgood.ReadingIsGoodApplication;
-import com.umutku.readingisgood.domain.Book;
 import com.umutku.readingisgood.domain.Customer;
-import com.umutku.readingisgood.dto.BookDTO;
 import com.umutku.readingisgood.dto.CustomerDTO;
 import com.umutku.readingisgood.infrastructure.CustomerRepository;
 import com.umutku.readingisgood.util.TestUtils;
@@ -74,7 +72,7 @@ class CustomerControllerTest {
 
 
     @Test
-    void testInvalidUserName() throws JSONException{
+    void testInvalidUserName() throws JSONException {
 
         //Mock repository
         Mockito.when(customerRepository.findCustomerByUserName(customer.getUserName())).thenReturn(Optional.of(customer));

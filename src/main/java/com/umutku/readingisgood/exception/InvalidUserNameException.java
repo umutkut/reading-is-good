@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class InvalidUserNameException extends RuntimeException {
-    private String userName;
+    private final String userName;
 
     public InvalidUserNameException(String userName, String message) {
         super(message);

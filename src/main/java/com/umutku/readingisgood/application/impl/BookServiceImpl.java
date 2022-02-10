@@ -27,13 +27,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public RestResponse<Book> getBook(long id) {
-        var result = bookRepository.findById(id).orElseThrow(()->new BookNotFoundException(id));
+        var result = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
         return new RestResponse<>(HttpStatus.OK, result);
     }
 
     @Override
     public RestResponse<Book> updateStock(long id, int newStock) {
-        var bookToUpdate = bookRepository.findById(id).orElseThrow(()->new BookNotFoundException(id));
+        var bookToUpdate = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 
         bookToUpdate.updateStock(newStock);
 
