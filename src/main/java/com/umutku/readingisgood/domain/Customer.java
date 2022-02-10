@@ -27,6 +27,9 @@ public class Customer extends BaseEntity {
     String password;
 
     @Nullable
+    String email;
+
+    @Nullable
     String address;
 
     @OneToMany
@@ -35,7 +38,7 @@ public class Customer extends BaseEntity {
     private List<Order> orders;
 
     public static Customer fromDTO(CustomerDTO dto){
-        return new Customer(dto.getUsername(), dto.getPassword(), dto.getAddress(), new ArrayList<>());
+        return new Customer(dto.getUsername(), dto.getPassword(), dto.getEmail(), dto.getAddress(), new ArrayList<>());
     }
 
     public void addOrder(Order order){
