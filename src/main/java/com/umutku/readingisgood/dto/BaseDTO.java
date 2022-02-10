@@ -5,6 +5,6 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Getter
-public class BaseDTO {
+public abstract class BaseDTO {
     private UUID id;
 }

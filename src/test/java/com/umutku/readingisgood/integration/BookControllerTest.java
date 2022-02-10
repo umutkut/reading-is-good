@@ -3,10 +3,10 @@ package com.umutku.readingisgood.integration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.umutku.readingisgood.ReadingIsGoodApplication;
-import com.umutku.readingisgood.controller.BookController;
 import com.umutku.readingisgood.domain.Book;
 import com.umutku.readingisgood.dto.BookDTO;
 import com.umutku.readingisgood.infrastructure.BookRepository;
+import com.umutku.readingisgood.util.TestUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -33,8 +32,6 @@ class BookControllerTest {
 
     TestRestTemplate restTemplate = new TestRestTemplate();
     HttpHeaders headers = new HttpHeaders();
-    @Autowired
-    BookController bookController;
     @MockBean
     BookRepository bookRepository;
     @LocalServerPort
@@ -61,7 +58,7 @@ class BookControllerTest {
         HttpEntity<BookDTO> entity = new HttpEntity<>(bookDTO, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/book"),
+                TestUtils.createURLWithPort("/api/v1/books", port),
                 HttpMethod.POST, entity, String.class);
 
         //Assert
@@ -82,7 +79,7 @@ class BookControllerTest {
         HttpEntity<BookDTO> entity = new HttpEntity<>(bookDTO, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/book?id=0"),
+                TestUtils.createURLWithPort("/api/v1/books?id=0", port),
                 HttpMethod.GET, entity, String.class);
 
         //Assert
@@ -106,7 +103,7 @@ class BookControllerTest {
         HttpEntity<BookDTO> entity = new HttpEntity<>(null, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/book/0/stock?newStock=" + newStock),
+                TestUtils.createURLWithPort("/api/v1/books/0/stock?newStock=" + newStock, port),
                 HttpMethod.PUT, entity, String.class);
 
         //Assert
@@ -129,7 +126,7 @@ class BookControllerTest {
         HttpEntity<BookDTO> entity = new HttpEntity<>(null, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/book/0/stock?newStock=" + newStock),
+                TestUtils.createURLWithPort("/api/v1/books/0/stock?newStock=" + newStock, port),
                 HttpMethod.PUT, entity, String.class);
 
         //Assert
@@ -146,7 +143,7 @@ class BookControllerTest {
         HttpEntity<BookDTO> entity = new HttpEntity<>(bookDTO, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/book?id=0"),
+                TestUtils.createURLWithPort("/api/v1/books?id=0", port),
                 HttpMethod.GET, entity, String.class);
 
         //Assert
@@ -154,7 +151,4 @@ class BookControllerTest {
         Assertions.assertEquals("NOT_FOUND", responseObj.get("status"));
     }
 
-    private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
-    }
 }
