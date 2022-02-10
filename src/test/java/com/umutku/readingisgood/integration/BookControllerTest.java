@@ -49,7 +49,7 @@ class BookControllerTest {
     }
 
     @Test
-    void testCreateBook() throws JSONException, JsonProcessingException {
+    void testCreateBookHappyPath() throws JSONException, JsonProcessingException {
 
         //Mock repository
         Mockito.when(bookRepository.save(book)).thenReturn(book);
@@ -70,7 +70,7 @@ class BookControllerTest {
     }
 
     @Test
-    void testGetBook() throws JSONException, JsonProcessingException {
+    void testGetBookHappyPath() throws JSONException, JsonProcessingException {
 
         //Mock repository
         Mockito.when(bookRepository.findById(0L)).thenReturn(Optional.of(book));
@@ -91,7 +91,7 @@ class BookControllerTest {
     }
 
     @Test
-    void testUpdateBook() throws JSONException, JsonProcessingException {
+    void testUpdateBookHappyPath() throws JSONException, JsonProcessingException {
         //Given
         int newStock = 111;
 

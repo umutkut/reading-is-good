@@ -38,4 +38,8 @@ public class Customer extends BaseEntity {
         return new Customer(dto.getUsername(), dto.getPassword(), dto.getAddress(), new ArrayList<>());
     }
 
+    public void addOrder(Order order){
+        orders.add(order);
+    }
+
 }

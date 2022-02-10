@@ -2,6 +2,7 @@ package com.umutku.readingisgood.domain;
 
 import com.google.common.base.Preconditions;
 import com.umutku.readingisgood.dto.BookDTO;
+import com.umutku.readingisgood.exception.NotEnoughStockException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,9 @@ public class Book extends BaseEntity {
     }
 
     public void decreaseStock(int amount) {
-        Preconditions.checkArgument(stock - amount >= 0, String.format(NOT_ENOUGH_STOCK, getId()));
+        if(stock - amount < 0){
+            throw new NotEnoughStockException(this.getId());
+        }
         this.stock -= amount;
     }
 

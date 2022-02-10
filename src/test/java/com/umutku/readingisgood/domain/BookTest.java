@@ -1,6 +1,7 @@
 package com.umutku.readingisgood.domain;
 
 import com.umutku.readingisgood.dto.BookDTO;
+import com.umutku.readingisgood.exception.NotEnoughStockException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +29,7 @@ class BookTest {
     @Test
     void invalidDecreaseStock() {
         Book book = new Book("title", "author", 11);
-        assertThrows(IllegalArgumentException.class, () -> book.decreaseStock(15));
+        assertThrows(NotEnoughStockException.class, () -> book.decreaseStock(15));
     }
 
     @Test
