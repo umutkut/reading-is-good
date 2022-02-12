@@ -1,10 +1,8 @@
 package com.umutku.readingisgood.dto;
 
-import lombok.Getter;
+import lombok.Data;
 
-import java.util.UUID;
-
-@Getter
+@Data
 public abstract class BaseDTO {
-    private UUID id;
+    private long id;
 }

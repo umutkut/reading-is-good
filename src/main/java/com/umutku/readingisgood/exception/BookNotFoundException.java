@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class BookNotFoundException extends RuntimeException {
-    long bookId;
+    private final long bookId;
 
     public BookNotFoundException(long bookId, String message) {
         super(message);

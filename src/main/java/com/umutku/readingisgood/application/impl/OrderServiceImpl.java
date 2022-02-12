@@ -37,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
         for (long bookId : orderDTO.getBooks()) {
             var book = bookRepository.findById(bookId)
                     .orElseThrow(() -> new BookNotFoundException(bookId));
+            book.decreaseStock(1);
             bookList.add(book);
         }
 

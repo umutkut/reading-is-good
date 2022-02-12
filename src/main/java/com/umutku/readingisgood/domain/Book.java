@@ -3,13 +3,15 @@ package com.umutku.readingisgood.domain;
 import com.umutku.readingisgood.dto.BookDTO;
 import com.umutku.readingisgood.exception.NotEnoughStockException;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Setter
 @Table(name = "book")
 @Entity
 @AllArgsConstructor
@@ -23,6 +25,8 @@ public class Book extends BaseEntity {
     private String author;
 
     private int stock;
+
+
 
     public static Book fromDTO(BookDTO bookDTO) {
         return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getStock());

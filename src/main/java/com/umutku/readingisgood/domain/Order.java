@@ -1,33 +1,35 @@
 package com.umutku.readingisgood.domain;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
-@Data
-@Table(name = "order")
+@Getter
+@Setter
+@Table(name = "customer_order")
 @Entity
 @NoArgsConstructor
 public class Order extends BaseEntity {
 
-    private long customerId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
-    @OneToMany
-    @JoinColumn(name = "books")
+    @ManyToMany(targetEntity = Book.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> books;
 
+    @Column(name = "order_date")
     private Date date;
 
-    public Order(long customerId, List<Book> books) {
-        this.customerId = customerId;
+    public Order(Customer customer, List<Book> books) {
+        this.customer = customer;
         this.books = books;
         this.date = Date.from(Instant.now());
     }
+
 }

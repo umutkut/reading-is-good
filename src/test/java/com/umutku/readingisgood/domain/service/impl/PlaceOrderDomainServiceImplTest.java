@@ -28,7 +28,7 @@ class PlaceOrderDomainServiceImplTest {
         var order = placeOrderService.placeOrder(customer, books);
 
         //Assertions
-        assertEquals(order.getCustomerId(), customer.getId());
+        assertEquals(order, customer);
         assertIterableEquals(order.getBooks(), books);
         assertEquals(stock1 - 1, order.getBooks().get(0).getStock());
         assertEquals(stock2 - 1, order.getBooks().get(1).getStock());

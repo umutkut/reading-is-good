@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class NotEnoughStockException extends RuntimeException {
-    long bookId;
+    private final long bookId;
 
     public NotEnoughStockException(long bookId, String message) {
         super(message);

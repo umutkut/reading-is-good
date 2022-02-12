@@ -16,6 +16,7 @@ import com.umutku.readingisgood.infrastructure.OrderRepository;
 import com.umutku.readingisgood.util.TestUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -24,10 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -69,7 +67,9 @@ class OrderControllerTest {
         int stock = 10;
         bookDTO = new BookDTO(title, author, stock);
         book = Book.fromDTO(bookDTO);
+        book.setId(0);
         book2 = Book.fromDTO(bookDTO);
+        book2.setId(1);
 
         String username = "UserName";
         String password = "Password";
@@ -81,7 +81,7 @@ class OrderControllerTest {
     void testPlaceOrderHappyPath() throws JSONException, JsonProcessingException {
         //Given
         OrderDTO orderDTO = new OrderDTO(customer.getId(), List.of(book.getId(), book2.getId()));
-        Order order = new Order(customer.getId(), List.of(book, book2));
+        Order order = new Order(customer, List.of(book, book2));
 
         //Mock repository
         Mockito.when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
@@ -103,8 +103,32 @@ class OrderControllerTest {
 
         Order responseOrder = new ObjectMapper().readValue(responseObj.get("data").toString(), Order.class);
         assertIterableEquals(order.getBooks(), responseOrder.getBooks());
-        assertEquals(order.getCustomerId(), responseOrder.getCustomerId());
+        assertEquals(order, responseOrder);
     }
 
+    @Test
+    void testNotEnoughStock() throws JSONException {
+        //Given
+        book.decreaseStock(10);
+        OrderDTO orderDTO = new OrderDTO(customer.getId(), List.of(book.getId(), book2.getId()));
+        Order order = new Order(customer, List.of(book, book2));
+
+        //Mock repository
+        Mockito.when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+        Mockito.when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
+        Mockito.when(bookRepository.findById(book2.getId())).thenReturn(Optional.of(book2));
+        Mockito.when(orderRepository.save(order)).thenReturn(order);
+        Mockito.when(placeOrderDomainService.placeOrder(Mockito.any(), Mockito.anyList())).thenReturn(order);
+
+        //Call endpoint
+        HttpEntity<OrderDTO> entity = new HttpEntity<>(orderDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                TestUtils.createURLWithPort("/api/v1/orders", port),
+                HttpMethod.POST, entity, String.class);
+        //Assert
+        JSONObject responseObj = new JSONObject(response.getBody());
+        Assertions.assertEquals("NOT_ACCEPTABLE", responseObj.get("status"));
+    }
 
 }

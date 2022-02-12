@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class CustomerNotFoundException extends RuntimeException {
-    long customer;
+    private final long customer;
 
     public CustomerNotFoundException(long customer, String message) {
         super(message);

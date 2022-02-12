@@ -16,7 +16,7 @@ public class PlaceOrderDomainServiceImpl implements PlaceOrderDomainService {
     @Override
     public Order placeOrder(Customer customer, List<Book> bookList) {
 
-        Order order = new Order(customer.getId(), bookList);
+        Order order = new Order(customer, bookList);
 
         customer.addOrder(order);
 
