@@ -2,6 +2,8 @@ package com.umutku.readingisgood.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.umutku.readingisgood.dto.CustomerDTO;
+import com.umutku.readingisgood.dto.OrderDTO;
+import com.umutku.readingisgood.dto.response.CustomerOrdersDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +44,15 @@ public class Customer extends BaseEntity {
 
     public void addOrder(Order order) {
         orders.add(order);
+    }
+
+    @JsonIgnore
+    public CustomerOrdersDTO getCustomerOrdersDTO(){
+        List<OrderDTO> orderDTOS = new ArrayList<>();
+        for (Order order: orders){
+            orderDTOS.add(order.toDTO());
+        }
+        return new CustomerOrdersDTO(getId(), orderDTOS);
     }
 
 }

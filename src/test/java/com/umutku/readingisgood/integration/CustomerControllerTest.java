@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.umutku.readingisgood.ReadingIsGoodApplication;
 import com.umutku.readingisgood.domain.Customer;
 import com.umutku.readingisgood.dto.CustomerDTO;
+import com.umutku.readingisgood.dto.response.CustomerOrdersDTO;
 import com.umutku.readingisgood.infrastructure.CustomerRepository;
 import com.umutku.readingisgood.util.TestUtils;
 import org.json.JSONException;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -87,6 +89,31 @@ class CustomerControllerTest {
         //Assert
         JSONObject responseObj = new JSONObject(response.getBody());
         Assertions.assertEquals("CONFLICT", responseObj.get("status"));
+    }
+
+    @Test
+    void testGetOrdersFromCustomer() throws JSONException, JsonProcessingException {
+        //Given
+        CustomerOrdersDTO customerOrdersDTO = new CustomerOrdersDTO(customer.getId(), List.of());
+        customer = Mockito.mock(Customer.class);
+
+        //Mock
+        Mockito.when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+        Mockito.when(customer.getCustomerOrdersDTO()).thenReturn(customerOrdersDTO);
+
+        //Call endpoint
+        HttpEntity<CustomerDTO> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                TestUtils.createURLWithPort("/api/v1/customers/" + customer.getId() + "/orders", port),
+                HttpMethod.GET, entity, String.class);
+
+        //Assert
+        JSONObject responseObj = new JSONObject(response.getBody());
+        Assertions.assertEquals("OK", responseObj.get("status"));
+
+        CustomerOrdersDTO responseCustomer = new ObjectMapper().readValue(responseObj.get("data").toString(), CustomerOrdersDTO.class);
+        Assertions.assertEquals(customerOrdersDTO, responseCustomer);
     }
 
 

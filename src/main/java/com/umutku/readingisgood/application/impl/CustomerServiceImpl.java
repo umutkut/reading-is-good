@@ -3,6 +3,8 @@ package com.umutku.readingisgood.application.impl;
 import com.umutku.readingisgood.application.CustomerService;
 import com.umutku.readingisgood.domain.Customer;
 import com.umutku.readingisgood.dto.CustomerDTO;
+import com.umutku.readingisgood.dto.response.CustomerOrdersDTO;
+import com.umutku.readingisgood.exception.CustomerNotFoundException;
 import com.umutku.readingisgood.exception.InvalidUserNameException;
 import com.umutku.readingisgood.infrastructure.CustomerRepository;
 import com.umutku.readingisgood.response.RestResponse;
@@ -29,4 +31,15 @@ public class CustomerServiceImpl implements CustomerService {
 
         return new RestResponse<>(HttpStatus.CREATED, result);
     }
+
+    @Override
+    public RestResponse<CustomerOrdersDTO> getOrders(long customerId) {
+        var customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        var result = customer.getCustomerOrdersDTO();
+
+        return new RestResponse<>(HttpStatus.OK, result);
+    }
+
+
 }

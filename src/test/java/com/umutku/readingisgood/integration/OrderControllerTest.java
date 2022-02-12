@@ -6,7 +6,6 @@ import com.umutku.readingisgood.ReadingIsGoodApplication;
 import com.umutku.readingisgood.domain.Book;
 import com.umutku.readingisgood.domain.Customer;
 import com.umutku.readingisgood.domain.Order;
-import com.umutku.readingisgood.domain.service.PlaceOrderDomainService;
 import com.umutku.readingisgood.dto.BookDTO;
 import com.umutku.readingisgood.dto.CustomerDTO;
 import com.umutku.readingisgood.dto.OrderDTO;
@@ -25,7 +24,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -47,8 +49,7 @@ class OrderControllerTest {
     CustomerRepository customerRepository;
     @MockBean
     BookRepository bookRepository;
-    @MockBean
-    PlaceOrderDomainService placeOrderDomainService;
+
 
     @LocalServerPort
     private int port;
@@ -88,7 +89,6 @@ class OrderControllerTest {
         Mockito.when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
         Mockito.when(bookRepository.findById(book2.getId())).thenReturn(Optional.of(book2));
         Mockito.when(orderRepository.save(order)).thenReturn(order);
-        Mockito.when(placeOrderDomainService.placeOrder(Mockito.any(), Mockito.anyList())).thenReturn(order);
 
         //Call endpoint
         HttpEntity<OrderDTO> entity = new HttpEntity<>(orderDTO, headers);
@@ -118,7 +118,6 @@ class OrderControllerTest {
         Mockito.when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
         Mockito.when(bookRepository.findById(book2.getId())).thenReturn(Optional.of(book2));
         Mockito.when(orderRepository.save(order)).thenReturn(order);
-        Mockito.when(placeOrderDomainService.placeOrder(Mockito.any(), Mockito.anyList())).thenReturn(order);
 
         //Call endpoint
         HttpEntity<OrderDTO> entity = new HttpEntity<>(orderDTO, headers);

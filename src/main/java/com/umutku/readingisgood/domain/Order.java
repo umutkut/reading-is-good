@@ -1,11 +1,13 @@
 package com.umutku.readingisgood.domain;
 
+import com.umutku.readingisgood.dto.OrderDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +32,14 @@ public class Order extends BaseEntity {
         this.customer = customer;
         this.books = books;
         this.date = Date.from(Instant.now());
+    }
+
+    public OrderDTO toDTO() {
+        List<Long> bookIds = new ArrayList<>();
+        for (Book book : books) {
+            bookIds.add(book.getId());
+        }
+        return new OrderDTO(customer.getId(), bookIds);
     }
 
 }
