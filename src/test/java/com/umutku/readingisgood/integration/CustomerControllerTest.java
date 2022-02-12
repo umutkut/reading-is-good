@@ -116,5 +116,22 @@ class CustomerControllerTest {
         Assertions.assertEquals(customerOrdersDTO, responseCustomer);
     }
 
+    @Test
+    void testGetOrdersFromCustomerNotFound() throws JSONException {
 
+        //Mock
+        Mockito.when(customerRepository.findById(customer.getId())).thenReturn(Optional.empty());
+
+        //Call endpoint
+        HttpEntity<CustomerDTO> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                TestUtils.createURLWithPort("/api/v1/customers/" + customer.getId() + "/orders", port),
+                HttpMethod.GET, entity, String.class);
+
+        //Assert
+        JSONObject responseObj = new JSONObject(response.getBody());
+        Assertions.assertEquals("NOT_FOUND", responseObj.get("status"));
+
+    }
 }

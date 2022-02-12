@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 public class CustomerNotFoundException extends RuntimeException {
-    private final long customer;
+    private final long customerId;
 
-    public CustomerNotFoundException(long customer, String message) {
+    public CustomerNotFoundException(long customerId, String message) {
         super(message);
-        this.customer = customer;
+        this.customerId = customerId;
     }
 
-    public CustomerNotFoundException(long customer) {
-        this.customer = customer;
+    public CustomerNotFoundException(long customerId) {
+        this.customerId = customerId;
     }
 }
