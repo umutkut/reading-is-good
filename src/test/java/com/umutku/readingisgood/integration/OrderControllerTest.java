@@ -107,6 +107,48 @@ class OrderControllerTest {
     }
 
     @Test
+    void testGetOrderHappyPath() throws JSONException, JsonProcessingException {
+        //Given
+        Order order = new Order(customer, List.of(book, book2));
+
+        //Mock repository
+        Mockito.when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
+
+        //Call endpoint
+        HttpEntity<OrderDTO> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                TestUtils.createURLWithPort("/api/v1/orders?orderId=" + order.getId(), port),
+                HttpMethod.GET, entity, String.class);
+
+        //Assert
+        JSONObject responseObj = new JSONObject(response.getBody());
+        assertEquals("OK", responseObj.get("status"));
+
+        Order responseOrder = new ObjectMapper().readValue(responseObj.get("data").toString(), Order.class);
+        assertEquals(order, responseOrder);
+    }
+
+    @Test
+    void testGetOrderNotFound() throws JSONException {
+
+        //Mock repository
+        Mockito.when(orderRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+        //Call endpoint
+        HttpEntity<OrderDTO> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                TestUtils.createURLWithPort("/api/v1/orders?orderId=" + 0, port),
+                HttpMethod.GET, entity, String.class);
+
+        //Assert
+        JSONObject responseObj = new JSONObject(response.getBody());
+        assertEquals("NOT_FOUND", responseObj.get("status"));
+
+    }
+
+    @Test
     void testNotEnoughStock() throws JSONException {
         //Given
         book.decreaseStock(10);

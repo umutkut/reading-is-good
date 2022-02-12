@@ -7,4 +7,6 @@ import com.umutku.readingisgood.response.RestResponse;
 public interface OrderService {
 
     RestResponse<Order> place(OrderDTO orderDTO);
+
+    RestResponse<Order> getOrder(long orderId);
 }

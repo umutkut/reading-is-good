@@ -7,6 +7,7 @@ import com.umutku.readingisgood.domain.service.PlaceOrderDomainService;
 import com.umutku.readingisgood.dto.OrderDTO;
 import com.umutku.readingisgood.exception.BookNotFoundException;
 import com.umutku.readingisgood.exception.CustomerNotFoundException;
+import com.umutku.readingisgood.exception.OrderNotFoundException;
 import com.umutku.readingisgood.infrastructure.BookRepository;
 import com.umutku.readingisgood.infrastructure.CustomerRepository;
 import com.umutku.readingisgood.infrastructure.OrderRepository;
@@ -48,4 +49,12 @@ public class OrderServiceImpl implements OrderService {
 
         return new RestResponse<>(HttpStatus.CREATED, result);
     }
+
+    @Override
+    public RestResponse<Order> getOrder(long orderId) {
+        var result = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+        return new RestResponse<>(HttpStatus.OK, result);
+    }
+
+
 }
