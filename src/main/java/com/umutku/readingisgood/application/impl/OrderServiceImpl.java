@@ -5,6 +5,7 @@ import com.umutku.readingisgood.domain.Book;
 import com.umutku.readingisgood.domain.Order;
 import com.umutku.readingisgood.domain.service.PlaceOrderDomainService;
 import com.umutku.readingisgood.dto.OrderDTO;
+import com.umutku.readingisgood.dto.request.DateIntervalDTO;
 import com.umutku.readingisgood.exception.BookNotFoundException;
 import com.umutku.readingisgood.exception.CustomerNotFoundException;
 import com.umutku.readingisgood.exception.OrderNotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +55,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public RestResponse<Order> getOrder(long orderId) {
         var result = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+        return new RestResponse<>(HttpStatus.OK, result);
+    }
+
+    @Override
+    public RestResponse<List<Order>> getOrderByDate(DateIntervalDTO dateIntervalDTO) {
+        var result = orderRepository.findAllByDateAfterAndDateBefore(dateIntervalDTO.getStartDate(), dateIntervalDTO.getEndDate());
         return new RestResponse<>(HttpStatus.OK, result);
     }
 
