@@ -80,7 +80,7 @@ public class Customer extends BaseEntity {
 
         var orderDate = order.getDate();
         calendar.setTime(orderDate);
-        var month = calendar.get(Calendar.MONTH);
+        var month = calendar.get(Calendar.MONTH) + 1; //index conversion
 
         var statistic = statisticsMap.getOrDefault(month, new Statistics(Month.of(month), 0, 0, 0.0));
 
