@@ -1,5 +1,6 @@
 package com.umutku.readingisgood.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.umutku.readingisgood.dto.OrderDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,20 @@ public class Order extends BaseEntity {
             bookIds.add(book.getId());
         }
         return new OrderDTO(customer.getId(), bookIds);
+    }
+
+    @JsonIgnore
+    public int getBookCount(){
+        return books.size();
+    }
+
+    @JsonIgnore
+    public double totalOrderAmount(){
+        double amount = 0.0;
+        for(Book book : books){
+            amount += book.getPrice();
+        }
+        return amount;
     }
 
 }

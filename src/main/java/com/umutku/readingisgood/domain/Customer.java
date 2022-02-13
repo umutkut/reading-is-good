@@ -11,8 +11,8 @@ import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Month;
+import java.util.*;
 
 @Getter
 @Setter
@@ -21,6 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends BaseEntity {
+
+    private final Calendar calendar = Calendar.getInstance();
+
 
     //TODO: spring security will be integrated
 
@@ -47,17 +50,44 @@ public class Customer extends BaseEntity {
     }
 
     @JsonIgnore
-    public CustomerOrdersDTO getCustomerOrdersDTO(){
+    public CustomerOrdersDTO getCustomerOrdersDTO() {
         List<OrderDTO> orderDTOS = new ArrayList<>();
-        for (Order order: orders){
+        for (Order order : orders) {
             orderDTOS.add(order.toDTO());
         }
         return new CustomerOrdersDTO(getId(), orderDTOS);
     }
 
     @JsonIgnore
-    public int getOrderCount(){
+    public int getOrderCount() {
         return orders.size();
     }
 
+    @JsonIgnore
+    public Map<Integer, Statistics> getStatistics() {
+        //TODO: should be seperated by years too
+
+        Map<Integer, Statistics> statisticsMap = new HashMap<>();
+
+        for (Order order : orders) {
+            fillStatisticsMapWithOrder(statisticsMap, order);
+        }
+
+        return statisticsMap;
+    }
+
+    private void fillStatisticsMapWithOrder(Map<Integer, Statistics> statisticsMap, Order order) {
+
+        var orderDate = order.getDate();
+        calendar.setTime(orderDate);
+        var month = calendar.get(Calendar.MONTH);
+
+        var statistic = statisticsMap.getOrDefault(month, new Statistics(Month.of(month), 0, 0, 0.0));
+
+        statistic.addToTotalOrderCount(1);
+        statistic.addToTotalBookCount(order.getBookCount());
+        statistic.addToTotalPurchasedAmount(order.totalOrderAmount());
+
+        statisticsMap.put(month, statistic);
+    }
 }

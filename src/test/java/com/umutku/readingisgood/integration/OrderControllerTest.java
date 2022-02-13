@@ -69,7 +69,7 @@ class OrderControllerTest {
         String title = "TestTitle";
         String author = "TestAuthor";
         int stock = 10;
-        bookDTO = new BookDTO(title, author, stock);
+        bookDTO = new BookDTO(title, author, 52.8, stock);
         book = Book.fromDTO(bookDTO);
         book.setId(0);
         book2 = Book.fromDTO(bookDTO);

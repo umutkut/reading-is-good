@@ -17,9 +17,9 @@ class PlaceOrderDomainServiceImplTest {
         Customer customer = new Customer("name", "password", "email", "address", new ArrayList<>());
 
         int stock1 = 10;
-        Book book1 = new Book("title1", "author1", stock1);
+        Book book1 = new Book("title1", "author1", 50.0, stock1);
         int stock2 = 75;
-        Book book2 = new Book("title2", "author2", stock2);
+        Book book2 = new Book("title2", "author2", 50.5, stock2);
         List<Book> books = List.of(book1, book2);
 
         //Method to test

@@ -44,7 +44,7 @@ class BookControllerTest {
         String title = "TestTitle";
         String author = "TestAuthor";
         int stock = 10;
-        bookDTO = new BookDTO(title, author, stock);
+        bookDTO = new BookDTO(title, author, 52.8, stock);
         book = Book.fromDTO(bookDTO);
     }
 

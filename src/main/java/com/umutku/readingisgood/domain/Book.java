@@ -24,12 +24,13 @@ public class Book extends BaseEntity {
 
     private String author;
 
+    private double price;
+
     private int stock;
 
 
-
     public static Book fromDTO(BookDTO bookDTO) {
-        return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getStock());
+        return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getPrice(), bookDTO.getStock());
     }
 
     public void decreaseStock(int amount) {

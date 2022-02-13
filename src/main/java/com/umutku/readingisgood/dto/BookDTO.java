@@ -1,12 +1,13 @@
 package com.umutku.readingisgood.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
 @AllArgsConstructor
 @ToString
 public class BookDTO extends BaseDTO {
@@ -15,6 +16,10 @@ public class BookDTO extends BaseDTO {
 
 
     private String author;
+
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = false)
+    private double price;
 
     @NotNull
     private int stock;
