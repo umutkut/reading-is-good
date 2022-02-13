@@ -15,6 +15,9 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+    profiles:
+      - prod
+      - dev
 
   pgadmin:
     container_name: pgadmin_container
@@ -25,12 +28,26 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
       - pgadmin:/var/lib/pgadmin
-
+    profiles:
+      - prod
+      - dev
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
       - postgres
     restart: unless-stopped
+
+  reading_is_good:
+    container_name: reading-is-good
+    image: umutku/reading-is-good
+    networks:
+      - postgres
+    ports:
+      - "8090:8090"
+    profiles:
+      - prod
+    environment:
+      - "SPRING_PROFILES_ACTIVE=prod"
 
 networks:
   postgres:
