@@ -55,4 +55,9 @@ public class Customer extends BaseEntity {
         return new CustomerOrdersDTO(getId(), orderDTOS);
     }
 
+    @JsonIgnore
+    public int getOrderCount(){
+        return orders.size();
+    }
+
 }
